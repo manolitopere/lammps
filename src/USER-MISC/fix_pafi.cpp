@@ -341,14 +341,11 @@ void FixPAFI::post_force(int vflag)
   MPI_Allreduce(proj,proj_all,5,MPI_DOUBLE,MPI_SUM,world);
   MPI_Allreduce(c_v,c_v_all,10,MPI_DOUBLE,MPI_SUM,world);
 
-
-  // results - f.n*(1-psi), (f.n)^2*(1-psi)^2, 1-psi, dX.n
-  if(comm->me ==0) {
-    results_all[0] = proj_all[0] * (1.-proj_all[3]);
-    results_all[1] = results_all[0] * results_all[0];
-    results_all[2] = 1.-proj_all[3];
-    results_all[3] = proj_all[4];
-  }
+  results_all[0] = proj_all[0] * (1.-proj_all[3]);
+  results_all[1] = results_all[0] * results_all[0];
+  results_all[2] = 1.-proj_all[3];
+  results_all[3] = fabs(proj_all[4]);
+  
   MPI_Bcast(results_all,4,MPI_DOUBLE,0,world);
   force_flag = 1;
 

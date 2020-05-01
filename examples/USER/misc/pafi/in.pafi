@@ -42,7 +42,7 @@ variable dn equal f_hp[4]*f_hp[4] # should be zero to float precision
 
 fix af all ave/time 1 1000 1000 f_hp[1] f_hp[2] f_hp[3] v_dn
 
-variable adn equal sqrt(f_af[4]) # should be very small (approx. 1e-6 A)
+variable adn equal f_af[4] # should be very small (approx. 1e-6 A)
 variable apf equal f_af[1]
 
 

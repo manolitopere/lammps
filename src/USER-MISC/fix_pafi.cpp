@@ -345,8 +345,6 @@ void FixPAFI::post_force(int vflag)
   results_all[1] = results_all[0] * results_all[0];
   results_all[2] = 1.-proj_all[3];
   results_all[3] = fabs(proj_all[4]);
-  
-  MPI_Bcast(results_all,4,MPI_DOUBLE,0,world);
   force_flag = 1;
 
   for (int i = 0; i < nlocal; i++){

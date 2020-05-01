@@ -122,7 +122,7 @@ FixPAFI::FixPAFI(LAMMPS *lmp, int narg, char **arg) :
         od_flag = 1;
       iarg += 2;
     } else if (strcmp(arg[iarg],"com") == 0) {
-      if (strcmp(arg[iarg+1],"no") == 0 || strcmp(arg[iarg+1],"0")
+      if (strcmp(arg[iarg+1],"no") == 0 || strcmp(arg[iarg+1],"0") == 0)
         com_flag = 0;
       else if (strcmp(arg[iarg+1],"yes"  || strcmp(arg[iarg+1],"1") == 0)
         com_flag = 1;

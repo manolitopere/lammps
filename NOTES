@@ -1,0 +1,90 @@
+PairHybrid is the way to go
+
+(check I can do this with Milady, should be fine)
+
+Idea would be to make two force calls or intervene once first call is made?
+Ideally need to do this for all force field styles.....
+
+1) add double** scale array to pair_milady (already in pair_eam)
+
+2) New fix PAFITI:
+
+1) add FixPAFITI as friend class to pair_hybrid
+
+2) in FixPAFITI
+
+#include "pair_hybrid.h"
+...
+
+PairHybrid *hybrid = NULL;
+if (strncmp(force->pair_style,"hybrid",6) == 0) {
+  hybrid = (PairHybrid *)force->pair;
+} else error->all(FLERR,"This compute will only work with a hybrid pair style");
+
+
+-------
+
+in .h
+
+struct Perturb {
+  int which,ivar;
+  char *var;
+  char *pstyle,*pparam;
+  int ilo,ihi,jlo,jhi;
+  int pdim;
+  double **array,**array_orig;
+  int aparam;
+};
+
+Perturb *perturb;
+
+----
+
+in setup() in cpp
+
+for (int m = 0; m < npert; m++) {
+  Perturb *pert = &perturb[m];
+
+
+  Pair *pair = force->pair_match(pert->pstyle,1);
+  if (pair == NULL) error->all(FLERR,"compute fep pair style "
+                               "does not exist");
+  void *ptr = pair->extract(pert->pparam,pert->pdim);
+  if (ptr == NULL)
+    error->all(FLERR,"compute fep pair style param not supported");
+
+  pert->array = (double **) ptr;
+
+  // if pair hybrid, test that ilo,ihi,jlo,jhi are valid for sub-style
+
+  if ((strcmp(force->pair_style,"hybrid") == 0 ||
+       strcmp(force->pair_style,"hybrid/overlay") == 0)) {
+    PairHybrid *pair = (PairHybrid *) force->pair;
+    for (i = pert->ilo; i <= pert->ihi; i++)
+      for (j = MAX(pert->jlo,i); j <= pert->jhi; j++)
+        if (!pair->check_ijtype(i,j,pert->pstyle))
+          error->all(FLERR,"compute fep type pair range is not valid for "
+                     "pair hybrid sub-style");
+
+}
+
+that's done ....
+-----
+
+
+int ref_index = 0; // input args
+
+in pre_force ?? check.... (force has already been cleared...) setmask() etc
+
+this *should* be OK to extract force at this point
+
+hybrid->style[ref_index]->compute(eflag,vflag);
+
+
+will fill force vector ??? what about communication...
+
+alternatively create new pair hybrid that computes timestep dependent force ??
+
+order of fixes could do it
+
+should be one good option in there somewhere..

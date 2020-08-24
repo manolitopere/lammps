@@ -829,7 +829,7 @@ void lammps_gather_atoms(void *ptr, char *name,
 
     int natoms = static_cast<int> (lmp->atom->natoms);
 
-    void *vptr lmp->atom->extract(name);
+    void *vptr = lmp->atom->extract(name);
 
     if (vptr == NULL) {
       lmp->error->warning(FLERR,"lammps_gather_atoms: unknown property name");
@@ -970,7 +970,7 @@ void lammps_gather_atoms_concat(void *ptr, char *name,
 
     int natoms = static_cast<int> (lmp->atom->natoms);
 
-    void *vptr lmp->atom->extract(name);
+    void *vptr = lmp->atom->extract(name);
 
     if (vptr == NULL) {
       lmp->error->warning(FLERR,"lammps_gather_atoms: unknown property name");
@@ -1131,7 +1131,7 @@ void lammps_gather_atoms_subset(void *ptr, char *name,
       return;
     }
 
-    void *vptr lmp->atom->extract(name);
+    void *vptr = lmp->atom->extract(name);
     if (vptr == NULL) {
       lmp->error->warning(FLERR,"lammps_gather_atoms_subset: "
                           "unknown property name");
@@ -1282,7 +1282,7 @@ void lammps_scatter_atoms(void *ptr, char *name,
 
     int natoms = static_cast<int> (lmp->atom->natoms);
 
-    void *vptr lmp->atom->extract(name);
+    void *vptr = lmp->atom->extract(name);
 
     if(vptr == NULL) {
         lmp->error->warning(FLERR,
@@ -1411,7 +1411,7 @@ void lammps_scatter_atoms_subset(void *ptr, char *name,
       return;
     }
 
-    void *vptr lmp->atom->extract(name);
+    void *vptr = lmp->atom->extract(name);
 
     if(vptr == NULL) {
         lmp->error->warning(FLERR,"lammps_scatter_atoms_subset: "
@@ -2258,7 +2258,7 @@ void lammps_scatter(void *ptr, char *name,
 
     int natoms = static_cast<int> (lmp->atom->natoms);
 
-    void *vptr lmp->atom->extract(name);
+    void *vptr = lmp->atom->extract(name);
 
     if (vptr==NULL && strstr(name,"f_") == name) { // fix
 
@@ -2459,7 +2459,7 @@ void lammps_scatter_subset(void *ptr, char *name,
       return;
     }
 
-    void *vptr lmp->atom->extract(name);
+    void *vptr = lmp->atom->extract(name);
 
     if (vptr==NULL && strstr(name,"f_") == name) { // fix
 
